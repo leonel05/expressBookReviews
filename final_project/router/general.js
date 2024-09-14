@@ -73,4 +73,61 @@ public_users.get('/review/:isbn',function (req, res) {
   res.status(404).json({ message: "No book with this isbn."})
 });
 
+const allBooks = async (url) => {
+  let req = axios.get(url);
+
+  req.then(results => {
+    let asyncBooks = results.books;
+    return asyncBooks;
+  })
+  .catch(err => {
+    console.log(err.toString());
+  });
+};
+
+const bookDetailsByIsbn = async (isbn, url) => {
+  const req = axios.get(url);
+  return (await req).books[isbn];
+};
+
+const bookDetailsByAuthor = (author, url) => {
+  let req = axios.get(url);
+
+  req.then(results => {
+    let books = results.books;
+    const keys = Object.keys(books);
+    let filtered_books = [];
+
+    keys.forEach(isbn => {
+      if (books[isbn].author === author) {
+        filtered_books.push(books[isbn]);
+      }
+    });
+    return filtered_books;
+  })
+  .catch(err => {
+    console.log(err.toString());
+  });
+};
+
+const bookDetailsByTitle = (title, url) => {
+  let req = axios.get(url);
+
+  req.then(results => {
+    let books = results.books;
+    const keys = Object.keys(books);
+    let filtered_books = [];
+
+    keys.forEach(isbn => {
+      if (books[isbn].title === title) {
+        filtered_books.push(books[isbn]);
+      }
+    });
+    return filtered_books;
+  })
+  .catch(err => {
+    console.log(err.toString());
+  });
+};
+
 module.exports.general = public_users;
